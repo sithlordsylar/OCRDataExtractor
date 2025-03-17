@@ -2,21 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Simple OCR Data Extractor</title>
+  <title>Simple OCR Contact Extractor</title>
   <link rel="stylesheet" href="styles.css">
   <!-- Load Tesseract.js from CDN -->
   <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v2.1.1/dist/tesseract.min.js"></script>
 </head>
 <body>
   <div class="container">
-    <h1>Simple OCR Data Extractor</h1>
+    <!-- Logo Banner (use PNG or SVG for best quality) -->
+    <img src="logo.png" alt="Logo Banner" class="logo-banner">
     
-    <!-- Session toggle -->
+    <h1>Simple OCR Contact Extractor</h1>
+    
+    <!-- Session toggle with helper icon -->
     <div class="controls">
       <label for="sessionToggle">
-        <input type="checkbox" id="sessionToggle">
         Enable Session Mode
+        <sup>
+          <span class="help-icon" data-help="Activate session mode to process multiple images in one go. This bulk mode streamlines data extraction by aggregating results until you complete the session, keeping the interface neat.">?</span>
+        </sup>
       </label>
+      <input type="checkbox" id="sessionToggle">
     </div>
     
     <!-- File upload and scan button -->
@@ -25,19 +31,36 @@
       <button id="scanBtn">Scan Images</button>
     </div>
     
+    <!-- Modal for file input confirmation -->
+    <div id="fileModal" class="modal">
+      <div class="modal-content">
+        <p>Only .jpg, .jpeg, .png formats are accepted. Ensure the photos uploaded have the correct format and extension.</p>
+        <button id="modalProceedBtn">Noted, Proceed</button>
+        <button id="modalCancelBtn">Let me double check</button>
+      </div>
+    </div>
+    
     <!-- Session controls (only visible when session mode is on) -->
     <div class="controls" id="sessionControls" style="display: none;">
       <button id="completeSessionBtn">Complete Session</button>
     </div>
     
+    <!-- Reminder text for session mode -->
+    <div class="controls" id="sessionReminder" style="display: none;">
+      <p>Please click "Complete Session" to export the bulk data.</p>
+    </div>
+    
     <!-- Container for displaying OCR results -->
     <div id="resultsContainer"></div>
     
-    <!-- Export controls (visible after processing) -->
+    <!-- Export controls (visible after processing when session mode is off or after session complete) -->
     <div class="controls" id="exportControls" style="display: none;">
       <button id="exportCsvBtn">Export CSV</button>
       <button id="exportXmlBtn">Export XML</button>
     </div>
+    
+    <!-- Tooltip for help icons -->
+    <div id="tooltip" class="tooltip"></div>
   </div>
   
   <script src="main.js"></script>
