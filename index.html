@@ -14,21 +14,22 @@
     
     <h1>Simple OCR Contact Extractor</h1>
     
-    <!-- Session toggle with helper icon -->
+    <!-- Session toggle with help icon -->
     <div class="controls">
-      <label for="sessionToggle">
-        Enable Session Mode
-        <sup>
-          <span class="help-icon" data-help="Activate session mode to process multiple images in one go. This bulk mode streamlines data extraction by aggregating results until you complete the session, keeping the interface neat.">?</span>
-        </sup>
-      </label>
+      <label for="sessionToggle">Enable Session Mode</label>
+      <sup>
+        <span class="help-icon" data-help="Activate bulk mode to process multiple images in one session. This allows you to accumulate results and export them all at once for a streamlined workflow." >?</span>
+      </sup>
       <input type="checkbox" id="sessionToggle">
     </div>
     
-    <!-- File upload and scan button -->
+    <!-- File upload and scan button with help icon -->
     <div class="controls">
       <input type="file" id="fileInput" accept="image/*" multiple>
       <button id="scanBtn">Scan Images</button>
+      <sup>
+        <span class="help-icon" data-help="After selecting files, click 'Scan Images' to run OCR on your images and display the results for data selection." >?</span>
+      </sup>
     </div>
     
     <!-- Modal for file input confirmation -->
@@ -40,9 +41,12 @@
       </div>
     </div>
     
-    <!-- Session controls (only visible when session mode is on) -->
+    <!-- Session controls (visible when session mode is on) -->
     <div class="controls" id="sessionControls" style="display: none;">
       <button id="completeSessionBtn">Complete Session</button>
+      <sup>
+        <span class="help-icon" data-help="Click this after processing all images in your session to enable exporting of the combined data." >?</span>
+      </sup>
     </div>
     
     <!-- Reminder text for session mode -->
@@ -53,10 +57,13 @@
     <!-- Container for displaying OCR results -->
     <div id="resultsContainer"></div>
     
-    <!-- Export controls (visible after processing when session mode is off or after session complete) -->
+    <!-- Export controls with help icon -->
     <div class="controls" id="exportControls" style="display: none;">
       <button id="exportCsvBtn">Export CSV</button>
       <button id="exportXmlBtn">Export XML</button>
+      <sup>
+        <span class="help-icon" data-help="Export your processed data to CSV or XML format for use in other applications." >?</span>
+      </sup>
     </div>
     
     <!-- Tooltip for help icons -->
