@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fileModal.style.display = 'none';
   });
 
-  // When fileInput is clicked (if not bypassed), show modal
+  // In case fileInput is clicked directly (should be bypassed if using "Choose Files")
   fileInput.addEventListener('click', (e) => {
     if (!bypassFileModal) {
       e.preventDefault();
@@ -135,19 +135,19 @@ document.addEventListener('DOMContentLoaded', () => {
             lineData.push({ text: line, type: '' });
           });
           imageResultDiv.innerHTML = `<h3>${file.name}</h3>` + html;
-          
-          // Add event listeners for each dropdown
+
+          // Attach event listeners for each dropdown
           imageResultDiv.querySelectorAll('select').forEach(select => {
             select.addEventListener('change', (e) => {
               const idx = e.target.getAttribute('data-index');
               lineData[idx].type = e.target.value;
             });
           });
-          
+
           // Save results based on session mode
           if (sessionMode) {
             sessionResults.push({ fileName: file.name, lines: lineData });
-            fileInput.value = "";
+            fileInput.value = ""; // Clear file input
           } else {
             sessionResults = [{ fileName: file.name, lines: lineData }];
             exportControls.style.display = 'block';
