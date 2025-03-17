@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Global state variables
   let sessionMode = false;
-  let sessionResults = []; // Stores data for each processed image
+  let sessionResults = []; // Stores OCR data for each processed image
   let bypassFileModal = false; // Flag to bypass modal on file input click
   const allowedExtensions = ['jpg', 'jpeg', 'png'];
 
@@ -32,32 +32,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const clearConfirmBtn = document.getElementById('clearConfirmBtn');
   const clearCancelBtn = document.getElementById('clearCancelBtn');
 
-  // Custom Choose Files button event: show file modal
+  // Quick Tips Modal events
+  quickTipsBtn.addEventListener('click', () => {
+    quickTipsModal.style.display = 'block';
+  });
+  quickTipsCloseBtn.addEventListener('click', () => {
+    quickTipsModal.style.display = 'none';
+  });
+
+  // "Choose Files" button event: show file format modal
   chooseFilesBtn.addEventListener('click', () => {
     fileModal.style.display = 'block';
   });
 
-  // Modal button actions for file modal
+  // File modal actions
   modalProceedBtn.addEventListener('click', () => {
     fileModal.style.display = 'none';
     bypassFileModal = true;
     fileInput.click();
   });
-
   modalCancelBtn.addEventListener('click', () => {
     fileModal.style.display = 'none';
   });
 
-  // Quick Tips Modal actions
-  quickTipsBtn.addEventListener('click', () => {
-    quickTipsModal.style.display = 'block';
+  // When fileInput is clicked (if not bypassed), show modal
+  fileInput.addEventListener('click', (e) => {
+    if (!bypassFileModal) {
+      e.preventDefault();
+      fileModal.style.display = 'block';
+    } else {
+      bypassFileModal = false;
+    }
   });
 
-  quickTipsCloseBtn.addEventListener('click', () => {
-    quickTipsModal.style.display = 'none';
-  });
-
-  // Toggle session mode
+  // Session toggle event
   sessionToggle.addEventListener('change', () => {
     sessionMode = sessionToggle.checked;
     sessionControls.style.display = sessionMode ? 'block' : 'none';
@@ -71,26 +79,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Process selected files with OCR, including file validation
+  // Scan Images button event
   scanBtn.addEventListener('click', () => {
     const files = fileInput.files;
     if (!files.length) {
       alert("Please select one or more image files.");
       return;
     }
-    
     Array.from(files).forEach(file => {
       // Validate file extension
       const ext = file.name.split('.').pop().toLowerCase();
       if (!allowedExtensions.includes(ext)) {
-        alert(`File "${file.name}" is not accepted. Allowed formats are: .jpg, .jpeg, .png`);
-        return; // Skip processing this file
+        alert(`File "${file.name}" is not accepted. Allowed formats: .jpg, .jpeg, .png`);
+        return;
       }
-      
       const reader = new FileReader();
       reader.onload = function(e) {
         const imageDataUrl = e.target.result;
-        // Create a container for this image's result with spinner and loading text
+        // Create container for OCR result
         const imageResultDiv = document.createElement('div');
         imageResultDiv.className = 'image-result';
         imageResultDiv.innerHTML = `
@@ -99,8 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <p class="loading-text">Performing OCR...</p>
         `;
         resultsContainer.appendChild(imageResultDiv);
-        
-        // Perform OCR using Tesseract.js with a progress logger
+
         Tesseract.recognize(imageDataUrl, 'eng', {
           logger: m => {
             if (m.status === 'recognizing text') {
@@ -113,13 +118,12 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         })
         .then(({ data: { text } }) => {
-          // Split OCR output into non-empty lines
+          // Split OCR text into lines and build alternating-color divs
           const lines = text.split(/\r?\n/).filter(line => line.trim() !== '');
           let html = '';
           const lineData = [];
           lines.forEach((line, index) => {
-            const style = (index % 2 === 1) ? 'background-color: #00b5de; color: #fff;' : '';
-            html += `<div class="line" style="${style}">
+            html += `<div class="line">
                         <span>${line}</span>
                         <select data-index="${index}">
                           <option value="">-- Select Type --</option>
@@ -128,13 +132,11 @@ document.addEventListener('DOMContentLoaded', () => {
                           <option value="email">Email</option>
                         </select>
                       </div>`;
-            // Initialize with no selection
             lineData.push({ text: line, type: '' });
           });
-          // Replace spinner and loading text with the OCR results
           imageResultDiv.innerHTML = `<h3>${file.name}</h3>` + html;
           
-          // Listen for dropdown changes to record user selections
+          // Add event listeners for each dropdown
           imageResultDiv.querySelectorAll('select').forEach(select => {
             select.addEventListener('change', (e) => {
               const idx = e.target.getAttribute('data-index');
@@ -142,17 +144,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
           });
           
-          // Save results: if session mode is on, accumulate results; otherwise, override previous data.
+          // Save results based on session mode
           if (sessionMode) {
             sessionResults.push({ fileName: file.name, lines: lineData });
-            fileInput.value = ""; // Optionally clear file input for subsequent uploads
+            fileInput.value = "";
           } else {
             sessionResults = [{ fileName: file.name, lines: lineData }];
             exportControls.style.display = 'block';
           }
         })
         .catch(err => {
-          imageResultDiv.innerHTML += `<p style="color: red;">Error processing OCR.</p>`;
+          imageResultDiv.innerHTML += `<p style="color:red;">Error processing OCR.</p>`;
           console.error(err);
         });
       };
@@ -160,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // When session is complete, enable export and hide top reminder
+  // Complete Session button event
   completeSessionBtn.addEventListener('click', () => {
     if (sessionResults.length === 0) {
       alert("No images have been processed in this session.");
@@ -170,14 +172,11 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionReminder.style.display = 'none';
   });
 
-  // Clear All button: show clear confirmation modal
+  // Clear All button event: show confirmation modal
   clearAllBtn.addEventListener('click', () => {
     clearModal.style.display = 'block';
   });
-
-  // Clear confirmation modal actions
   clearConfirmBtn.addEventListener('click', () => {
-    // Clear all data: reset sessionResults, clear results container, hide export controls and reminders
     sessionResults = [];
     resultsContainer.innerHTML = "";
     exportControls.style.display = 'none';
@@ -185,80 +184,21 @@ document.addEventListener('DOMContentLoaded', () => {
     bottomReminder.style.display = 'none';
     clearModal.style.display = 'none';
   });
-
   clearCancelBtn.addEventListener('click', () => {
     clearModal.style.display = 'none';
   });
 
-  // Generate CSV content from sessionResults
-  function generateCSV() {
-    let csvContent = "File Name,Name,Contact Number,Email\n";
-    sessionResults.forEach(result => {
-      let name = "", contact = "", email = "";
-      result.lines.forEach(line => {
-        if (line.type === "name" && !name) {
-          name = line.text.replace(/,/g, ' ');
-        }
-        if (line.type === "contact" && !contact) {
-          contact = line.text.replace(/,/g, ' ');
-        }
-        if (line.type === "email" && !email) {
-          email = line.text.replace(/,/g, ' ');
-        }
-      });
-      csvContent += `"${result.fileName}","${name}","${contact}","${email}"\n`;
-    });
-    return csvContent;
-  }
-
-  // Generate XML content from sessionResults
-  function generateXML() {
-    let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<images>\n';
-    sessionResults.forEach(result => {
-      let name = "", contact = "", email = "";
-      result.lines.forEach(line => {
-        if (line.type === "name" && !name) {
-          name = line.text;
-        }
-        if (line.type === "contact" && !contact) {
-          contact = line.text;
-        }
-        if (line.type === "email" && !email) {
-          email = line.text;
-        }
-      });
-      xmlContent += `  <image file="${result.fileName}">
-    <name>${name}</name>
-    <contact>${contact}</contact>
-    <email>${email}</email>
-  </image>\n`;
-    });
-    xmlContent += '</images>';
-    return xmlContent;
-  }
-
-  // Utility: Trigger file download from generated content
-  function downloadFile(content, fileName, mimeType) {
-    const blob = new Blob([content], { type: mimeType });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = fileName;
-    a.click();
-    URL.revokeObjectURL(a.href);
-  }
-
-  // Attach export functionality to buttons
+  // Export functionality
   exportCsvBtn.addEventListener('click', () => {
     const csv = generateCSV();
     downloadFile(csv, "data.csv", "text/csv");
   });
-
   exportXmlBtn.addEventListener('click', () => {
     const xml = generateXML();
     downloadFile(xml, "data.xml", "application/xml");
   });
 
-  // Tooltip functionality for help icons – stop propagation so clicks on icons don't trigger parent events.
+  // Tooltip functionality for help icons
   const helpIcons = document.querySelectorAll('.help-icon');
   helpIcons.forEach(icon => {
     icon.addEventListener('click', (e) => {
@@ -271,9 +211,50 @@ document.addEventListener('DOMContentLoaded', () => {
       tooltip.style.display = 'block';
     });
   });
-
-  // Hide tooltip when clicking anywhere else
   document.addEventListener('click', () => {
     tooltip.style.display = 'none';
   });
+
+  // Utility functions
+  function generateCSV() {
+    let csvContent = "File Name,Name,Contact Number,Email\n";
+    sessionResults.forEach(result => {
+      let name = "", contact = "", email = "";
+      result.lines.forEach(line => {
+        if (line.type === "name" && !name) name = line.text.replace(/,/g, ' ');
+        if (line.type === "contact" && !contact) contact = line.text.replace(/,/g, ' ');
+        if (line.type === "email" && !email) email = line.text.replace(/,/g, ' ');
+      });
+      csvContent += `"${result.fileName}","${name}","${contact}","${email}"\n`;
+    });
+    return csvContent;
+  }
+  
+  function generateXML() {
+    let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<images>\n';
+    sessionResults.forEach(result => {
+      let name = "", contact = "", email = "";
+      result.lines.forEach(line => {
+        if (line.type === "name" && !name) name = line.text;
+        if (line.type === "contact" && !contact) contact = line.text;
+        if (line.type === "email" && !email) email = line.text;
+      });
+      xmlContent += `  <image file="${result.fileName}">
+    <name>${name}</name>
+    <contact>${contact}</contact>
+    <email>${email}</email>
+  </image>\n`;
+    });
+    xmlContent += '</images>';
+    return xmlContent;
+  }
+  
+  function downloadFile(content, fileName, mimeType) {
+    const blob = new Blob([content], { type: mimeType });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = fileName;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
 });
