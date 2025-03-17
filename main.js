@@ -15,14 +15,40 @@ document.addEventListener('DOMContentLoaded', () => {
   const exportControls = document.getElementById('exportControls');
   const exportCsvBtn = document.getElementById('exportCsvBtn');
   const exportXmlBtn = document.getElementById('exportXmlBtn');
+  const fileModal = document.getElementById('fileModal');
+  const modalProceedBtn = document.getElementById('modalProceedBtn');
+  const modalCancelBtn = document.getElementById('modalCancelBtn');
+  const sessionReminder = document.getElementById('sessionReminder');
+  const tooltip = document.getElementById('tooltip');
+
+  // Intercept file input click to show modal confirmation
+  fileInput.addEventListener('click', (e) => {
+    // Prevent the file dialog from opening immediately
+    e.preventDefault();
+    fileModal.style.display = 'block';
+  });
+
+  // Modal button actions
+  modalProceedBtn.addEventListener('click', () => {
+    fileModal.style.display = 'none';
+    // Programmatically trigger the file input click event
+    fileInput.click();
+  });
+
+  modalCancelBtn.addEventListener('click', () => {
+    fileModal.style.display = 'none';
+    // Do nothing, allowing the user to double-check their files
+  });
 
   // Toggle session mode
   sessionToggle.addEventListener('change', () => {
     sessionMode = sessionToggle.checked;
     sessionControls.style.display = sessionMode ? 'block' : 'none';
+    sessionReminder.style.display = sessionMode ? 'block' : 'none';
     if (!sessionMode) {
       sessionResults = [];
       exportControls.style.display = 'none';
+      sessionReminder.style.display = 'none';
     }
   });
 
@@ -108,13 +134,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // When session is complete, enable export
+  // When session is complete, enable export and hide reminder
   completeSessionBtn.addEventListener('click', () => {
     if (sessionResults.length === 0) {
       alert("No images have been processed in this session.");
       return;
     }
     exportControls.style.display = 'block';
+    sessionReminder.style.display = 'none';
   });
 
   // Generate CSV content from sessionResults
@@ -183,5 +210,27 @@ document.addEventListener('DOMContentLoaded', () => {
   exportXmlBtn.addEventListener('click', () => {
     const xml = generateXML();
     downloadFile(xml, "data.xml", "application/xml");
+  });
+
+  // Tooltip functionality for help icons
+  const helpIcons = document.querySelectorAll('.help-icon');
+  helpIcons.forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      // Get help text from data attribute
+      const helpText = e.target.getAttribute('data-help');
+      // Set tooltip text and display it near the icon
+      tooltip.innerText = helpText;
+      const rect = e.target.getBoundingClientRect();
+      tooltip.style.top = (rect.top + window.scrollY - tooltip.offsetHeight - 10) + 'px';
+      tooltip.style.left = (rect.left + window.scrollX) + 'px';
+      tooltip.style.display = 'block';
+      // Prevent event from bubbling so it doesn't immediately hide
+      e.stopPropagation();
+    });
+  });
+
+  // Hide tooltip when clicking anywhere else
+  document.addEventListener('click', () => {
+    tooltip.style.display = 'none';
   });
 });
