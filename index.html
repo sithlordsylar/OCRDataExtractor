@@ -23,17 +23,18 @@
     <div class="controls">
       <label for="sessionToggle">Enable Session Mode</label>
       <sup>
-        <span class="help-icon" data-help="Activate bulk mode to process multiple images in one session. This mode allows you to accumulate results and export them all at once for a smoother workflow." aria-label="Help: Enable Session Mode">?</span>
+        <span class="help-icon" data-help="Activate bulk mode to process multiple images in one session. This mode lets you accumulate results and export them all at once for a smoother workflow." aria-label="Help: Enable Session Mode">?</span>
       </sup>
       <input type="checkbox" id="sessionToggle" aria-label="Toggle session mode">
     </div>
     
-    <!-- File upload and scan button with help icon -->
+    <!-- File upload controls: Hidden file input + custom Choose Files button and Scan Images -->
     <div class="controls">
-      <input type="file" id="fileInput" accept="image/*" multiple aria-label="Select image files (Accepted formats: .jpg, .jpeg, .png)">
+      <input type="file" id="fileInput" accept="image/*" multiple style="display: none;" aria-label="Select image files (Accepted formats: .jpg, .jpeg, .png)">
+      <button id="chooseFilesBtn" aria-label="Choose Files">Choose Files</button>
       <button id="scanBtn" aria-label="Scan Images">Scan Images</button>
       <sup>
-        <span class="help-icon" data-help="After selecting your files, click 'Scan Images' to run OCR on each image and display the results for further selection." aria-label="Help: Scan Images">?</span>
+        <span class="help-icon" data-help="After choosing your files, click 'Scan Images' to perform OCR on each image and display the results for further selection." aria-label="Help: Scan Images">?</span>
       </sup>
     </div>
     
@@ -41,7 +42,7 @@
     <div id="fileModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDesc">
       <div class="modal-content">
         <h2 id="modalTitle">File Format Reminder</h2>
-        <p id="modalDesc">Only .jpg, .jpeg, .png formats are accepted. Please ensure your photos have the correct format and extension.</p>
+        <p id="modalDesc">Only .jpg, .jpeg, and .png formats are accepted. Please ensure your photos have the correct format and extension.</p>
         <button id="modalProceedBtn" aria-label="Proceed with file selection">Noted, Proceed</button>
         <button id="modalCancelBtn" aria-label="Cancel and re-check files">Let me double check</button>
       </div>
@@ -53,12 +54,12 @@
         <h2 id="quickTipsTitle">Quick Tips</h2>
         <ol id="quickTipsDesc">
           <li>Toggle session mode if you wish to process multiple images at once.</li>
-          <li>Select your image files (accepted formats: .jpg, .jpeg, .png) using the file chooser.</li>
-          <li>Click "Scan Images" to run OCR on your images.</li>
-          <li>Review the scanned lines which are color-coded for easy navigation.</li>
-          <li>Label each line appropriately (Name, Contact Number, Email) using the dropdown menus.</li>
-          <li>If in session mode, click "Complete Session" after processing all images to enable data export.</li>
-          <li>Export your data using CSV or XML, or clear all data if needed.</li>
+          <li>Click "Choose Files" to select your image files (accepted formats: .jpg, .jpeg, .png).</li>
+          <li>After confirming file formats, click "Scan Images" to run OCR on each image.</li>
+          <li>Review the scanned lines, which are color-coded for easier navigation.</li>
+          <li>Label each line appropriately using the dropdown menus.</li>
+          <li>If in session mode, click "Complete Session" after processing all images to enable exporting.</li>
+          <li>Export your data as CSV or XML, or clear all data if needed.</li>
         </ol>
         <button id="quickTipsCloseBtn" aria-label="Close Quick Tips">Close</button>
       </div>
@@ -99,4 +100,16 @@
     <div id="clearModal" class="modal" role="dialog" aria-labelledby="clearModalTitle" aria-describedby="clearModalDesc">
       <div class="modal-content">
         <h2 id="clearModalTitle">Clear All Data Confirmation</h2>
-        <p id="clearModalDesc">This action will remove all processed data. Please ensure you have expor
+        <p id="clearModalDesc">This action will remove all processed data. Please ensure you have exported your data before proceeding. Are you sure you want to clear all data?</p>
+        <button id="clearConfirmBtn" aria-label="Yes, clear all data">Yes, I Understand</button>
+        <button id="clearCancelBtn" aria-label="No, cancel clearing data">No! Thanks for the Reminder</button>
+      </div>
+    </div>
+    
+    <!-- Tooltip for help icons -->
+    <div id="tooltip" class="tooltip"></div>
+  </div>
+  
+  <script src="main.js"></script>
+</body>
+</html>
