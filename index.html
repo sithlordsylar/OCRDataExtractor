@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple OCR Data Extractor</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Load Tesseract.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@v2.1.1/dist/tesseract.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Simple OCR Data Extractor</h1>
+    
+    <!-- Session toggle -->
+    <div class="controls">
+      <label for="sessionToggle">
+        <input type="checkbox" id="sessionToggle">
+        Enable Session Mode
+      </label>
+    </div>
+    
+    <!-- File upload and scan button -->
+    <div class="controls">
+      <input type="file" id="fileInput" accept="image/*" multiple>
+      <button id="scanBtn">Scan Images</button>
+    </div>
+    
+    <!-- Session controls (only visible when session mode is on) -->
+    <div class="controls" id="sessionControls" style="display: none;">
+      <button id="completeSessionBtn">Complete Session</button>
+    </div>
+    
+    <!-- Container for displaying OCR results -->
+    <div id="resultsContainer"></div>
+    
+    <!-- Export controls (visible after processing) -->
+    <div class="controls" id="exportControls" style="display: none;">
+      <button id="exportCsvBtn">Export CSV</button>
+      <button id="exportXmlBtn">Export XML</button>
+    </div>
+  </div>
+  
+  <script src="main.js"></script>
+</body>
+</html>

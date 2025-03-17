@@ -1,0 +1,79 @@
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 4px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.controls {
+  text-align: center;
+  margin: 10px 0;
+}
+
+/* Results Container */
+#resultsContainer {
+  margin-top: 20px;
+}
+
+.image-result {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.image-result h3 {
+  margin: 0 0 10px;
+}
+
+/* Line item styling */
+.line {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.line span {
+  flex: 1;
+}
+
+.line select {
+  margin-left: 10px;
+}
+
+/* Spinner Styles */
+.spinner {
+  border: 4px solid #f3f3f3; /* Light gray */
+  border-top: 4px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Loading text styling */
+.loading-text {
+  text-align: center;
+  margin-top: 5px;
+  font-size: 0.9em;
+  color: #555;
+}
