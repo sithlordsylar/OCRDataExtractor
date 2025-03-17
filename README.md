@@ -1,13 +1,13 @@
 # Simple OCR Contact Extractor
 
-A lightweight, browser-based OCR tool built with HTML, JavaScript, and CSS using [Tesseract.js](https://github.com/naptha/tesseract.js). This tool allows SMEs and non-technical users to quickly extract contact details from image files (e.g., screenshots of business cards or WhatsApp messages) and export the data as CSV or XML files. It includes a session mode for bulk processing and an intuitive, color-coded interface.
+A lightweight, browser-based OCR tool built with HTML, JavaScript, and CSS using [Tesseract.js](https://github.com/naptha/tesseract.js). This tool allows SMEs and non-technical users to quickly extract contact details from image files (e.g., screenshots of business cards or WhatsApp messages) and export the data as CSV or XLS files. It includes a session mode for bulk processing and an intuitive, color-coded interface.
 
 ## Features
 
 - **OCR Scanning:** Uses Tesseract.js for client-side OCR.
 - **Session Mode:** Process multiple images in one session and export combined results.
 - **Data Selection:** Easily label scanned text lines (Name, Contact Number, Email) via dropdowns.
-- **Export Options:** Export the extracted data as CSV or XML.
+- **Export Options:** Export the extracted data as CSV or XLS.
 - **User-Friendly Interface:** Includes modals, tooltips, and alternating line colors for improved readability.
 - **Customization:** Replace the placeholder logo with your own business logo.
 
@@ -64,7 +64,7 @@ A lightweight, browser-based OCR tool built with HTML, JavaScript, and CSS using
    - Once all images are processed, click the **Complete Session** button to enable the export options.
 
 7. **Export or Clear Data:**
-   - Click **Export CSV** or **Export XML** to download the data.
+   - Click **Export CSV** or **Export XLS** to download the data.
    - Alternatively, click **Clear All** if you want to remove all processed data (a confirmation modal will appear).
   
 ## Customization
