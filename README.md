@@ -29,6 +29,7 @@ A lightweight, browser-based OCR tool built with HTML, JavaScript, and CSS using
 
 2. **Customize Your Logo:**
    - Replace the `logo.png` file in the project root with your business-specific logo. For best quality, use a PNG or SVG file.
+   - Customize the color scheme for displaying OCR results by adjusting the styles.css file (guide will be provided below)
    
 3. **Deploying on GitHub Pages:**
    - Push your repository to GitHub.
@@ -65,8 +66,34 @@ A lightweight, browser-based OCR tool built with HTML, JavaScript, and CSS using
 7. **Export or Clear Data:**
    - Click **Export CSV** or **Export XML** to download the data.
    - Alternatively, click **Clear All** if you want to remove all processed data (a confirmation modal will appear).
+  
+## Customization
 
-## Optional Sections
+### Changing the Result Display Colors
+
+By default, the tool uses the following color scheme for displaying OCR results:
+
+- **Odd-numbered lines:**  
+  - **Background Color:** White (`#ffffff`)
+  - **Text Color:** Black (`#000000`)
+
+- **Even-numbered lines:**  
+  - **Background Color:** Light blue (`#00b5de`)
+  - **Text Color:** White (`#ffffff`)
+
+To change these colors to match your brand, open the `styles.css` file and locate for the comment "Line item styling with alternating colors" which has the following CSS rules:
+
+```css
+.line:nth-child(odd) {
+  background-color: #fff;
+  color: #000;
+}
+.line:nth-child(even) {
+  background-color: #00b5de;
+  color: #fff;
+}
+```
+Simply replace the hex color codes (#fff, #000, #00b5de, etc.) with your desired colors. Save your changes and refresh your deployed site to see the new color scheme in action.
 
 ### Troubleshooting
 
