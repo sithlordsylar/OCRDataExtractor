@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // DOM elements
   const sessionToggle = document.getElementById('sessionToggle');
   const fileInput = document.getElementById('fileInput');
+  const chooseFilesBtn = document.getElementById('chooseFilesBtn');
   const scanBtn = document.getElementById('scanBtn');
   const resultsContainer = document.getElementById('resultsContainer');
   const sessionControls = document.getElementById('sessionControls');
@@ -31,14 +32,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const clearConfirmBtn = document.getElementById('clearConfirmBtn');
   const clearCancelBtn = document.getElementById('clearCancelBtn');
 
-  // Intercept file input click to show modal confirmation (unless bypass flag is set)
-  fileInput.addEventListener('click', (e) => {
-    if (!bypassFileModal) {
-      e.preventDefault();
-      fileModal.style.display = 'block';
-    } else {
-      bypassFileModal = false; // Reset flag
-    }
+  // Custom Choose Files button event: show file modal
+  chooseFilesBtn.addEventListener('click', () => {
+    fileModal.style.display = 'block';
   });
 
   // Modal button actions for file modal
