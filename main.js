@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const completeSessionBtn = document.getElementById('completeSessionBtn');
   const exportControls = document.getElementById('exportControls');
   const exportCsvBtn = document.getElementById('exportCsvBtn');
-  const exportXmlBtn = document.getElementById('exportXmlBtn');
+  const exportXlsBtn = document.getElementById('exportXlsBtn');
   const clearAllBtn = document.getElementById('clearAllBtn');
   const fileModal = document.getElementById('fileModal');
   const modalProceedBtn = document.getElementById('modalProceedBtn');
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fileModal.style.display = 'none';
   });
 
-  // In case fileInput is clicked directly (should be bypassed if using "Choose Files")
+  // In case fileInput is clicked directly
   fileInput.addEventListener('click', (e) => {
     if (!bypassFileModal) {
       e.preventDefault();
@@ -193,9 +193,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const csv = generateCSV();
     downloadFile(csv, "data.csv", "text/csv");
   });
-  exportXmlBtn.addEventListener('click', () => {
-    const xml = generateXML();
-    downloadFile(xml, "data.xml", "application/xml");
+  // Replace XML export with XLS export
+  exportXlsBtn.addEventListener('click', () => {
+    const xls = generateXLS();
+    downloadFile(xls, "data.xls", "application/vnd.ms-excel");
   });
 
   // Tooltip functionality for help icons
@@ -230,8 +231,14 @@ document.addEventListener('DOMContentLoaded', () => {
     return csvContent;
   }
   
-  function generateXML() {
-    let xmlContent = '<?xml version="1.0" encoding="UTF-8"?>\n<images>\n';
+  // New function to generate XLS content (an HTML table)
+  function generateXLS() {
+    let table = `<table border="1"><tr>
+                    <th>File Name</th>
+                    <th>Name</th>
+                    <th>Contact Number</th>
+                    <th>Email</th>
+                  </tr>`;
     sessionResults.forEach(result => {
       let name = "", contact = "", email = "";
       result.lines.forEach(line => {
@@ -239,14 +246,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (line.type === "contact" && !contact) contact = line.text;
         if (line.type === "email" && !email) email = line.text;
       });
-      xmlContent += `  <image file="${result.fileName}">
-    <name>${name}</name>
-    <contact>${contact}</contact>
-    <email>${email}</email>
-  </image>\n`;
+      table += `<tr>
+                  <td>${result.fileName}</td>
+                  <td>${name}</td>
+                  <td>${contact}</td>
+                  <td>${email}</td>
+                </tr>`;
     });
-    xmlContent += '</images>';
-    return xmlContent;
+    table += `</table>`;
+    return table;
   }
   
   function downloadFile(content, fileName, mimeType) {
