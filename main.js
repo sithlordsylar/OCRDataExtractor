@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let sessionMode = false;
   let sessionResults = []; // Stores data for each processed image
   let bypassFileModal = false; // Flag to bypass modal on file input click
+  const allowedExtensions = ['jpg', 'jpeg', 'png'];
 
   // DOM elements
   const sessionToggle = document.getElementById('sessionToggle');
@@ -56,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Process selected files with OCR
+  // Process selected files with OCR, including file validation
   scanBtn.addEventListener('click', () => {
     const files = fileInput.files;
     if (!files.length) {
@@ -65,6 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     Array.from(files).forEach(file => {
+      // Validate file extension
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (!allowedExtensions.includes(ext)) {
+        alert(`File "${file.name}" is not accepted. Allowed formats are: .jpg, .jpeg, .png`);
+        return; // Skip processing this file
+      }
+      
       const reader = new FileReader();
       reader.onload = function(e) {
         const imageDataUrl = e.target.result;
