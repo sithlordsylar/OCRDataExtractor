@@ -18,9 +18,40 @@ h1 {
   text-align: center;
 }
 
+/* Logo banner styling */
+.logo-banner {
+  display: block;
+  max-width: 200px;
+  margin: 0 auto 20px auto;
+}
+
+/* Controls */
 .controls {
   text-align: center;
   margin: 10px 0;
+}
+
+/* Tooltip styling */
+.tooltip {
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  display: none;
+  z-index: 1000;
+}
+
+/* Help icon styling */
+.help-icon {
+  background-color: #3498db;
+  color: #fff;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.8em;
+  cursor: pointer;
+  margin-left: 4px;
 }
 
 /* Results Container */
@@ -76,4 +107,27 @@ h1 {
   margin-top: 5px;
   font-size: 0.9em;
   color: #555;
+}
+
+/* Modal styling */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: 4px;
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
 }
