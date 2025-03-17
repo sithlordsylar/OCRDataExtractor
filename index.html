@@ -10,7 +10,7 @@
 <body>
   <div class="container">
     <!-- Logo Banner (use PNG or SVG for best quality) -->
-    <img src="logo.png" alt="Logo Banner" class="logo-banner">
+    <img src="logo.png" alt="Company Logo Banner" class="logo-banner">
     
     <h1>Simple OCR Contact Extractor</h1>
     
@@ -18,34 +18,35 @@
     <div class="controls">
       <label for="sessionToggle">Enable Session Mode</label>
       <sup>
-        <span class="help-icon" data-help="Activate bulk mode to process multiple images in one session. This allows you to accumulate results and export them all at once for a streamlined workflow." >?</span>
+        <span class="help-icon" data-help="Activate bulk mode to process multiple images in one session. This mode lets you accumulate all results and export them as one file for a smoother workflow." aria-label="Help: Enable Session Mode">?</span>
       </sup>
-      <input type="checkbox" id="sessionToggle">
+      <input type="checkbox" id="sessionToggle" aria-label="Toggle session mode">
     </div>
     
     <!-- File upload and scan button with help icon -->
     <div class="controls">
-      <input type="file" id="fileInput" accept="image/*" multiple>
-      <button id="scanBtn">Scan Images</button>
+      <input type="file" id="fileInput" accept="image/*" multiple aria-label="Select image files (Accepted formats: .jpg, .jpeg, .png)">
+      <button id="scanBtn" aria-label="Scan Images">Scan Images</button>
       <sup>
-        <span class="help-icon" data-help="After selecting files, click 'Scan Images' to run OCR on your images and display the results for data selection." >?</span>
+        <span class="help-icon" data-help="After selecting your files, click 'Scan Images' to perform OCR on each image and display the results for further data selection." aria-label="Help: Scan Images">?</span>
       </sup>
     </div>
     
     <!-- Modal for file input confirmation -->
-    <div id="fileModal" class="modal">
+    <div id="fileModal" class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="modalDesc">
       <div class="modal-content">
-        <p>Only .jpg, .jpeg, .png formats are accepted. Ensure the photos uploaded have the correct format and extension.</p>
-        <button id="modalProceedBtn">Noted, Proceed</button>
-        <button id="modalCancelBtn">Let me double check</button>
+        <h2 id="modalTitle">File Format Reminder</h2>
+        <p id="modalDesc">Only .jpg, .jpeg, .png formats are accepted. Ensure the photos you upload have the correct format and extension.</p>
+        <button id="modalProceedBtn" aria-label="Proceed with file selection">Noted, Proceed</button>
+        <button id="modalCancelBtn" aria-label="Cancel and re-check files">Let me double check</button>
       </div>
     </div>
     
     <!-- Session controls (visible when session mode is on) -->
     <div class="controls" id="sessionControls" style="display: none;">
-      <button id="completeSessionBtn">Complete Session</button>
+      <button id="completeSessionBtn" aria-label="Complete Session">Complete Session</button>
       <sup>
-        <span class="help-icon" data-help="Click this after processing all images in your session to enable exporting of the combined data." >?</span>
+        <span class="help-icon" data-help="Click this after processing all your images to enable exporting of the combined results." aria-label="Help: Complete Session">?</span>
       </sup>
     </div>
     
@@ -59,10 +60,10 @@
     
     <!-- Export controls with help icon -->
     <div class="controls" id="exportControls" style="display: none;">
-      <button id="exportCsvBtn">Export CSV</button>
-      <button id="exportXmlBtn">Export XML</button>
+      <button id="exportCsvBtn" aria-label="Export CSV">Export CSV</button>
+      <button id="exportXmlBtn" aria-label="Export XML">Export XML</button>
       <sup>
-        <span class="help-icon" data-help="Export your processed data to CSV or XML format for use in other applications." >?</span>
+        <span class="help-icon" data-help="Export your processed data to CSV or XML format for further use in other applications." aria-label="Help: Export Data">?</span>
       </sup>
     </div>
     
