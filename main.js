@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Global state variables
   let sessionMode = false;
   let sessionResults = []; // Stores data for each processed image
+  let bypassFileModal = false; // Flag to bypass modal on file input click
 
   // DOM elements
   const sessionToggle = document.getElementById('sessionToggle');
@@ -21,23 +22,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const sessionReminder = document.getElementById('sessionReminder');
   const tooltip = document.getElementById('tooltip');
 
-  // Intercept file input click to show modal confirmation
+  // Intercept file input click to show modal confirmation (unless bypass flag is set)
   fileInput.addEventListener('click', (e) => {
-    // Prevent the file dialog from opening immediately
-    e.preventDefault();
-    fileModal.style.display = 'block';
+    if (!bypassFileModal) {
+      e.preventDefault();
+      fileModal.style.display = 'block';
+    } else {
+      bypassFileModal = false; // Reset flag
+    }
   });
 
   // Modal button actions
   modalProceedBtn.addEventListener('click', () => {
     fileModal.style.display = 'none';
-    // Programmatically trigger the file input click event
+    bypassFileModal = true;
     fileInput.click();
   });
 
   modalCancelBtn.addEventListener('click', () => {
     fileModal.style.display = 'none';
-    // Do nothing, allowing the user to double-check their files
+    // User will have a chance to check files again.
   });
 
   // Toggle session mode
@@ -118,8 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // Save results: if session mode is on, accumulate results; otherwise, override previous data.
           if (sessionMode) {
             sessionResults.push({ fileName: file.name, lines: lineData });
-            // Optionally, clear file input for subsequent uploads
-            fileInput.value = "";
+            fileInput.value = ""; // Optionally clear file input for subsequent uploads
           } else {
             sessionResults = [{ fileName: file.name, lines: lineData }];
             exportControls.style.display = 'block';
@@ -212,20 +215,17 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadFile(xml, "data.xml", "application/xml");
   });
 
-  // Tooltip functionality for help icons
+  // Tooltip functionality for help icons – stop propagation so clicks on icons don't trigger parent events.
   const helpIcons = document.querySelectorAll('.help-icon');
   helpIcons.forEach(icon => {
     icon.addEventListener('click', (e) => {
-      // Get help text from data attribute
+      e.stopPropagation(); // Prevent toggling other elements like checkboxes
       const helpText = e.target.getAttribute('data-help');
-      // Set tooltip text and display it near the icon
       tooltip.innerText = helpText;
       const rect = e.target.getBoundingClientRect();
       tooltip.style.top = (rect.top + window.scrollY - tooltip.offsetHeight - 10) + 'px';
       tooltip.style.left = (rect.left + window.scrollX) + 'px';
       tooltip.style.display = 'block';
-      // Prevent event from bubbling so it doesn't immediately hide
-      e.stopPropagation();
     });
   });
 
