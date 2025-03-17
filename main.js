@@ -17,11 +17,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const exportControls = document.getElementById('exportControls');
   const exportCsvBtn = document.getElementById('exportCsvBtn');
   const exportXmlBtn = document.getElementById('exportXmlBtn');
+  const clearAllBtn = document.getElementById('clearAllBtn');
   const fileModal = document.getElementById('fileModal');
   const modalProceedBtn = document.getElementById('modalProceedBtn');
   const modalCancelBtn = document.getElementById('modalCancelBtn');
   const sessionReminder = document.getElementById('sessionReminder');
+  const bottomReminder = document.getElementById('bottomReminder');
   const tooltip = document.getElementById('tooltip');
+  const quickTipsBtn = document.getElementById('quickTipsBtn');
+  const quickTipsModal = document.getElementById('quickTipsModal');
+  const quickTipsCloseBtn = document.getElementById('quickTipsCloseBtn');
+  const clearModal = document.getElementById('clearModal');
+  const clearConfirmBtn = document.getElementById('clearConfirmBtn');
+  const clearCancelBtn = document.getElementById('clearCancelBtn');
 
   // Intercept file input click to show modal confirmation (unless bypass flag is set)
   fileInput.addEventListener('click', (e) => {
@@ -33,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Modal button actions
+  // Modal button actions for file modal
   modalProceedBtn.addEventListener('click', () => {
     fileModal.style.display = 'none';
     bypassFileModal = true;
@@ -42,7 +50,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   modalCancelBtn.addEventListener('click', () => {
     fileModal.style.display = 'none';
-    // User will have a chance to check files again.
+  });
+
+  // Quick Tips Modal actions
+  quickTipsBtn.addEventListener('click', () => {
+    quickTipsModal.style.display = 'block';
+  });
+
+  quickTipsCloseBtn.addEventListener('click', () => {
+    quickTipsModal.style.display = 'none';
   });
 
   // Toggle session mode
@@ -50,10 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
     sessionMode = sessionToggle.checked;
     sessionControls.style.display = sessionMode ? 'block' : 'none';
     sessionReminder.style.display = sessionMode ? 'block' : 'none';
+    bottomReminder.style.display = sessionMode ? 'block' : 'none';
     if (!sessionMode) {
       sessionResults = [];
       exportControls.style.display = 'none';
       sessionReminder.style.display = 'none';
+      bottomReminder.style.display = 'none';
     }
   });
 
@@ -104,7 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
           let html = '';
           const lineData = [];
           lines.forEach((line, index) => {
-            html += `<div class="line">
+            const style = (index % 2 === 1) ? 'background-color: #00b5de; color: #fff;' : '';
+            html += `<div class="line" style="${style}">
                         <span>${line}</span>
                         <select data-index="${index}">
                           <option value="">-- Select Type --</option>
@@ -145,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // When session is complete, enable export and hide reminder
+  // When session is complete, enable export and hide top reminder
   completeSessionBtn.addEventListener('click', () => {
     if (sessionResults.length === 0) {
       alert("No images have been processed in this session.");
@@ -153,6 +172,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     exportControls.style.display = 'block';
     sessionReminder.style.display = 'none';
+  });
+
+  // Clear All button: show clear confirmation modal
+  clearAllBtn.addEventListener('click', () => {
+    clearModal.style.display = 'block';
+  });
+
+  // Clear confirmation modal actions
+  clearConfirmBtn.addEventListener('click', () => {
+    // Clear all data: reset sessionResults, clear results container, hide export controls and reminders
+    sessionResults = [];
+    resultsContainer.innerHTML = "";
+    exportControls.style.display = 'none';
+    sessionReminder.style.display = 'none';
+    bottomReminder.style.display = 'none';
+    clearModal.style.display = 'none';
+  });
+
+  clearCancelBtn.addEventListener('click', () => {
+    clearModal.style.display = 'none';
   });
 
   // Generate CSV content from sessionResults
@@ -227,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const helpIcons = document.querySelectorAll('.help-icon');
   helpIcons.forEach(icon => {
     icon.addEventListener('click', (e) => {
-      e.stopPropagation(); // Prevent toggling other elements like checkboxes
+      e.stopPropagation();
       const helpText = e.target.getAttribute('data-help');
       tooltip.innerText = helpText;
       const rect = e.target.getBoundingClientRect();
